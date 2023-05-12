@@ -1,4 +1,4 @@
-package LD_53
+package fantasy_chess
 
 import rl "vendor:raylib"
 

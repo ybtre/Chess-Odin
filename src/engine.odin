@@ -1,4 +1,4 @@
-package LD_53 
+package fantasy_chess 
 
 import rl "vendor:raylib"
 
@@ -18,10 +18,10 @@ initialize_engine :: proc(){
     setup_ants()
     setup_bettles()
 
-    setup_buttons()
-    set_btn_pos(&buttons[0], rl.Vector2{ 400, 700})
-    set_btn_pos(&buttons[1], rl.Vector2{ 600, 700})
-    set_btn_pos(&buttons[2], rl.Vector2{ 800, 700})
+    // setup_buttons()
+    // set_btn_pos(&buttons[0], rl.Vector2{ 400, 700})
+    // set_btn_pos(&buttons[1], rl.Vector2{ 600, 700})
+    // set_btn_pos(&buttons[2], rl.Vector2{ 800, 700})
 }
 
 update_engine :: proc(){

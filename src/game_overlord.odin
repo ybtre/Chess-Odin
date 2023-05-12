@@ -1,6 +1,4 @@
-package LD_53 
-
-
+package fantasy_chess 
 
 startup_game_overlord :: proc(){
     current_screen = SCREENS.MAIN_MENU

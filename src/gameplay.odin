@@ -1,4 +1,4 @@
-package LD_53 
+package fantasy_chess 
 
 import rl "vendor:raylib"
 // import "core:fmt"
@@ -20,8 +20,8 @@ update_gameplay :: proc() {
         gameplay_time_total += rl.GetFrameTime()
         spawn_timer += GetFrameTime()
 
-        update_buttons()
-        handle_button_interactions()
+        // update_buttons()
+        // handle_button_interactions()
 
         if spawn_timer >= beetle_spawn_timer
         {
@@ -57,7 +57,7 @@ render_gameplay :: proc(){
 	} 
 
     {// UI
-       render_buttons()
+    //    render_buttons()
         DrawText(TextFormat("Liver Pieces Supply: %i, %i", liver_pieces_count, len(liver_pieces_for_building)), 620, 10, 50, GRAY)
         DrawText(TextFormat("Gatherer Ants: %i", gatherer_ants_count), 700, 60, 50, GRAY)
         DrawText(TextFormat("Builder Ants: %i", builder_ants_count), 700, 110, 50, GRAY)

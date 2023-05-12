@@ -1,6 +1,5 @@
-package LD_53 
+package base 
 
-import rl "vendor:raylib"
 import "core:math"
 
 vec2_move_towards :: proc(V, TARGET : rl.Vector2, MAX_DIST : f32) -> rl.Vector2 {
