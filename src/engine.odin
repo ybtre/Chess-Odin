@@ -4,20 +4,15 @@ import rl "vendor:raylib"
 
 initialize_engine :: proc(){
 
+    load_all_textures()
+    setup_sprite_sources()
+
     startup_game_overlord()
     setup_game()
 
     setup_background()
 
-    setup_cathedral()
-    set_cathedral_pos(rl.Vector2{1100, 550})
-
-    setup_liver()
-    set_liver_pos(rl.Vector2{200, 120})
-
-    setup_ants()
-    setup_bettles()
-
+    setup_board()
     // setup_buttons()
     // set_btn_pos(&buttons[0], rl.Vector2{ 400, 700})
     // set_btn_pos(&buttons[1], rl.Vector2{ 600, 700})
@@ -58,13 +53,5 @@ render_engine :: proc(){
 shutdown_engine :: proc(){
     using rl
 
-    UnloadTexture(beetle_tex)
-    UnloadTexture(liver_tex)
-    UnloadTexture(btn_tex)
-    UnloadTexture(cathedral_tex)
-    UnloadTexture(bg_tex)
-    UnloadTexture(builder_ant_tex)
-    UnloadTexture(soldier_ant_tex)
-    UnloadTexture(gatherer_ant_tex)
-    UnloadTexture(liver_piece_tex)
+    unload_all_textures()
 }

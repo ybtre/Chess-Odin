@@ -6,6 +6,25 @@ Sprite :: struct {
     src: rl.Rectangle,
     dest: rl.Rectangle,
     center: rl.Vector2,
+    SCALE_FACTOR : f32,
+}
+
+Tile_state :: enum {
+    idle,
+    highlighted,
+    selected,
+}
+
+Tile :: struct {
+    id: int,
+    spr: Sprite,
+    pos: rl.Vector2,
+    hitbox: rl.Rectangle,
+    state: Tile_state,
+}
+
+Board :: struct {
+    tiles: [8][8]Tile,
 }
 
 Entity :: struct {
@@ -29,23 +48,6 @@ Button :: struct {
     is_pressed: bool,
 }
 
-Cathedral :: struct {
-    ent: Entity,
-    stages_sprites: []Sprite,
-    rot: f32,
-    build_progress: i32,
-    build_stage: i32,
-}
-
-Liver :: struct {
-    ent: Entity,
-    stages_sprites: []Sprite,
-    rot: f32,
-    hp: i32,
-    de_livering_progress: f32,
-    de_livering_stage: i32,
-}
-
 ANT_TYPES :: enum {
     GATHERER,
     SOLDIER,
@@ -61,20 +63,7 @@ Ant :: struct {
     spawn_point: rl.Vector2,
     target: rl.Vector2,
 
-    target_beetle: ^Beetle,
-    attack_cooldown: f32,
-    attack_timer: f32,
-    detection_radius: i32,
-    hp: i32,
-    dmg: i32,
-}
-
-Beetle :: struct {
-    ent: Entity,
-    rot: f32,
-    spawn_point: rl.Vector2,
-    target: ^Ant,
-    
+    // target_beetle: ^Beetle,
     attack_cooldown: f32,
     attack_timer: f32,
     detection_radius: i32,

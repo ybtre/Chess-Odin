@@ -1,6 +1,12 @@
 package base 
 
 import "core:math"
+import rl "vendor:raylib"
+
+update_sprite_dest :: proc(NEW_POS: rl.Vector2, DEST: rl.Rectangle) -> rl.Rectangle {
+    return { NEW_POS.x, NEW_POS.y, DEST.width, DEST.height }
+}
+
 
 vec2_move_towards :: proc(V, TARGET : rl.Vector2, MAX_DIST : f32) -> rl.Vector2 {
     result : rl.Vector2

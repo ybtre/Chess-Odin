@@ -6,7 +6,7 @@
         },
         {
             "name": "shared",
-            "path": "C:\\Users\\hristo.vuchev\\Documents\\WorkVerse\\Odin-Projects\\Odin-LD53\\src"
+            "path": "/src"
         }
     ],
     "enable_document_symbols": true,
