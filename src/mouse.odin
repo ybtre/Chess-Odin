@@ -9,15 +9,33 @@ update_check_mouse_collision :: proc()
 	
 	for x in 0..<8 {
 		for y in 0..<8
-		{
-			if CheckCollisionPointRec(GetMousePosition(), board.tiles[x][y].hitbox)
+		{	
+			t := &board.tiles[x][y]
+			
+			if CheckCollisionPointRec(GetMousePosition(), t.hitbox)
 			{
-				board.tiles[x][y].state = .highlighted
+				if t.state != .selected 
+				{ 
+					t.state = .highlighted
+				}
 				DrawText(TextFormat("HOVERING TILE: %i, %i", x, y), 20, 70, 30, GRAY)
+
+				if IsMouseButtonPressed(MouseButton.LEFT)
+				{
+					if selected_tile != nil
+					{ 
+						selected_tile.state = .idle 
+					}
+					t.state = .selected
+					selected_tile = t
+				}
 			}
 			else 
-			{
-				board.tiles[x][y].state = .idle
+			{	
+				if t.state == .highlighted
+				{
+					t.state = .idle
+				}
 			}	
 		}
 	}

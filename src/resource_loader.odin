@@ -5,13 +5,13 @@ import rl "vendor:raylib"
 TEX_SPRITESHEET 	: rl.Texture2D
 
 SRC_TILE_WHITE  				:: rl.Rectangle{ 35, 100, 34, 34 }
-SRC_TILE_WHITE_HIGHLIGHTED  	:: rl.Rectangle{ 139, 99, 36, 36 }
-SRC_TILE_WHITE_SELECTED			:: rl.Rectangle{ 35, 100, 34, 34 }
-SRC_TILE_WHITE_MOVES			:: rl.Rectangle{ 35, 100, 34, 34 }
+SRC_TILE_WHITE_HIGHLIGHTED  	:: rl.Rectangle{ 104, 99, 36, 36 }
+SRC_TILE_WHITE_SELECTED			:: rl.Rectangle{ 176, 99, 36, 36 }
+SRC_TILE_WHITE_MOVES			:: rl.Rectangle{ 35, 100, 36, 36 }
 SRC_TILE_BLACK					:: rl.Rectangle{ 0, 100, 34, 34 }
-SRC_TILE_BLACK_HIGHLIGHTED  	:: rl.Rectangle{ 104, 99, 36, 36 }
-SRC_TILE_BLACK_SELECTED			:: rl.Rectangle{ 35, 100, 34, 34 }
-SRC_TILE_BLACK_MOVES			:: rl.Rectangle{ 35, 100, 34, 34 }
+SRC_TILE_BLACK_HIGHLIGHTED  	:: rl.Rectangle{ 69, 99, 36, 36 }
+SRC_TILE_BLACK_SELECTED			:: rl.Rectangle{ 141, 99, 36, 36 }
+SRC_TILE_BLACK_MOVES			:: rl.Rectangle{ 35, 100, 36, 36 }
 
 
 SRC_WHITE_PAWN		:: rl.Rectangle

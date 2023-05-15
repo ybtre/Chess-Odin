@@ -4,8 +4,9 @@ import rl "vendor:raylib"
 import "base"
 
 board : Board
-tile : Tile
+selected_tile : ^Tile
 TILE_SCALE_FACTOR :f32: 2
+
 
 setup_board :: proc(){
 	using rl
@@ -23,18 +24,19 @@ setup_tile :: proc(X, Y: int) -> Tile {
 	
 	t.id = (X + Y)
 	
-	t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 6 + f32((Y * 68)) }	
+	// t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 6 + f32((Y * 68)) }	
+	t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 1.2 - f32((Y * 68)) }	
 	t.spr.SCALE_FACTOR = TILE_SCALE_FACTOR
 
 	if X % 2 == 0 && Y % 2 == 1 || X % 2 == 1 && Y % 2 == 0	
 	{
-		t.spr.src = SRC_TILE_BLACK
-		t.e_color = .BLACK
+		t.spr.src = SRC_TILE_WHITE
+		t.e_color = .WHITE
 	}
 	else if X % 2 == 0 && Y % 2 == 0 || X % 2 == 1 && Y % 2 == 1 
 	{
-		t.spr.src = SRC_TILE_WHITE
-		t.e_color = .WHITE
+		t.spr.src = SRC_TILE_BLACK
+		t.e_color = .BLACK
 	}
 	t.spr.dest = { t.pos.x, t.pos.y, t.spr.src.width * t.spr.SCALE_FACTOR, t.spr.src.height * t.spr.SCALE_FACTOR}
 	t.spr.center = { t.spr.src.width * t.spr.SCALE_FACTOR / 2, t.spr.src.height * t.spr.SCALE_FACTOR / 2 }
@@ -59,6 +61,13 @@ render_board :: proc() {
 	// DrawLine(i32(SCREEN.x) /2, 0, i32(SCREEN.x) /2, i32(SCREEN.y), RED)
 	// DrawLine(0, i32(SCREEN.y) /2, i32(SCREEN.x), i32(SCREEN.y) /2, RED)
 
+	render_board_tiles()
+}
+
+render_board_tiles :: proc() 
+{
+	using rl
+	
 	for x in 0..<8 {
 		for y in 0..<8 
 		{
@@ -117,10 +126,36 @@ render_board :: proc() {
 				// f32(GetTime()) * 90,
 				0, 
 				WHITE)
-
 			// DrawRectangleLinesEx(board.tiles[x][y].hitbox, 4, RED)
+
+			// drawing chess nomenclatures
+			if y == 0 
+			{	
+				if x == 0 {
+					DrawText("A", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				} else if x == 1 {
+					DrawText("B", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				} else if x == 2 {
+					DrawText("C", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				} else if x == 3 {
+					DrawText("D", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				} else if x == 4 {
+					DrawText("E", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				} else if x == 5 {
+					DrawText("F", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				} else if x == 6 {
+					DrawText("G", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				} else if x == 7 {
+					DrawText("H", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				}
+			}
+
+			if x == 0
+			{
+				DrawText(TextFormat("%i", y + 1), i32(t.hitbox.x) - 25, i32(t.hitbox.y) + 25, 30, WHITE)
+			}
 		}
-	}
+	}	
 }
 
 draw_board_tile :: proc(TILE: ^Tile)
