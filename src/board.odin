@@ -84,7 +84,8 @@ handle_selected_tile_piece :: proc()
 	}
 	
 	switch selected_tile.piece_on_tile.type
-	{
+	{	
+		//@Incomplete: need to make separate []^Board.Tiles for each tile state
 		case .PAWN:
 			if selected_tile.piece_on_tile.e_color == .WHITE
 			{
