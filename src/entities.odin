@@ -13,6 +13,13 @@ Tile_state :: enum {
     idle,
     highlighted,
     selected,
+    moves,
+}
+
+Ent_Color :: enum {
+    BLACK,
+    WHITE,
+    NONE,
 }
 
 Tile :: struct {
@@ -21,6 +28,7 @@ Tile :: struct {
     pos: rl.Vector2,
     hitbox: rl.Rectangle,
     state: Tile_state,
+    e_color: Ent_Color,
 }
 
 Board :: struct {

@@ -16,8 +16,9 @@ update_gameplay :: proc() {
     }
 
     if !is_paused
-    {
-    
+    {   
+        update_check_mouse_collision()
+        update_board()
     }
     else 
     {
@@ -38,6 +39,6 @@ render_gameplay :: proc(){
 
     {// UI
     //    render_buttons()
-        // DrawText(TextFormat("Liver Pieces Supply: %i, %i", liver_pieces_count, len(liver_pieces_for_building)), 620, 10, 50, GRAY)
+        DrawText(TextFormat("Mouse Pos: %i, %i", GetMouseX(), GetMouseY()), 20, 10, 50, GRAY)
     }
 }

@@ -29,10 +29,12 @@ setup_tile :: proc(X, Y: int) -> Tile {
 	if X % 2 == 0 && Y % 2 == 1 || X % 2 == 1 && Y % 2 == 0	
 	{
 		t.spr.src = SRC_TILE_BLACK
+		t.e_color = .BLACK
 	}
 	else if X % 2 == 0 && Y % 2 == 0 || X % 2 == 1 && Y % 2 == 1 
 	{
 		t.spr.src = SRC_TILE_WHITE
+		t.e_color = .WHITE
 	}
 	t.spr.dest = { t.pos.x, t.pos.y, t.spr.src.width * t.spr.SCALE_FACTOR, t.spr.src.height * t.spr.SCALE_FACTOR}
 	t.spr.center = { t.spr.src.width * t.spr.SCALE_FACTOR / 2, t.spr.src.height * t.spr.SCALE_FACTOR / 2 }
@@ -54,18 +56,64 @@ render_board :: proc() {
 	// tile.pos.x += 1
 	// on_tile_pos_update(&tile)
 			
-	DrawLine(i32(SCREEN.x) /2, 0, i32(SCREEN.x) /2, i32(SCREEN.y), RED)
-	DrawLine(0, i32(SCREEN.y) /2, i32(SCREEN.x), i32(SCREEN.y) /2, RED)
+	// DrawLine(i32(SCREEN.x) /2, 0, i32(SCREEN.x) /2, i32(SCREEN.y), RED)
+	// DrawLine(0, i32(SCREEN.y) /2, i32(SCREEN.x), i32(SCREEN.y) /2, RED)
 
 	for x in 0..<8 {
 		for y in 0..<8 
 		{
-			board.tiles[x][y] = setup_tile(x, y)
+			t := board.tiles[x][y]
+			switch t.state
+			{
+				case .idle:
+					if t.e_color == .WHITE
+					{
+						t.spr.src = SRC_TILE_WHITE
+					}
+					else if t.e_color == .BLACK 
+					{
+						t.spr.src = SRC_TILE_BLACK
+					}
+					break
+
+				case .highlighted:
+					if t.e_color == .WHITE
+					{
+						t.spr.src = SRC_TILE_WHITE_HIGHLIGHTED
+					}
+					else if t.e_color == .BLACK 
+					{
+						t.spr.src = SRC_TILE_BLACK_HIGHLIGHTED
+					}
+					break
+
+				case .selected:
+					if t.e_color == .WHITE
+					{
+						t.spr.src = SRC_TILE_WHITE_SELECTED
+					}
+					else if t.e_color == .BLACK 
+					{
+						t.spr.src = SRC_TILE_BLACK_SELECTED
+					}
+					break
+
+				case .moves:
+					if t.e_color == .WHITE
+					{
+						t.spr.src = SRC_TILE_WHITE_MOVES
+					}
+					else if t.e_color == .BLACK 
+					{
+						t.spr.src = SRC_TILE_BLACK_MOVES
+					}
+					break
+			}
 			DrawTexturePro(
 				TEX_SPRITESHEET, 
-				board.tiles[x][y].spr.src, 
-				board.tiles[x][y].spr.dest, 
-				board.tiles[x][y].spr.center, 
+				t.spr.src, 
+				t.spr.dest, 
+				t.spr.center, 
 				// f32(GetTime()) * 90,
 				0, 
 				WHITE)
@@ -73,6 +121,18 @@ render_board :: proc() {
 			// DrawRectangleLinesEx(board.tiles[x][y].hitbox, 4, RED)
 		}
 	}
+}
+
+draw_board_tile :: proc(TILE: ^Tile)
+{
+	rl.DrawTexturePro(
+		TEX_SPRITESHEET, 
+		TILE.spr.src, 
+		TILE.spr.dest, 
+		TILE.spr.center, 
+		// f32(GetTime()) * 90,
+		0, 
+		rl.WHITE)
 }
 
 on_tile_pos_update :: proc(TILE: ^Tile) {
