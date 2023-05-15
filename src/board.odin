@@ -92,7 +92,7 @@ handle_selected_tile_piece :: proc()
 				x := atoi(tile_coords[0])
 				y := atoi(tile_coords[1]) + 1
 				t := &board.tiles[x-1][y-1]
-				t.state = .highlighted
+				t.state = .moves
 			}
 			else if selected_tile.piece_on_tile.e_color == .BLACK
 			{
@@ -100,7 +100,7 @@ handle_selected_tile_piece :: proc()
 				x := atoi(tile_coords[0])
 				y := atoi(tile_coords[1]) - 2
 				t := &board.tiles[x-1][y-1]
-				t.state = .highlighted
+				t.state = .moves
 			}
 		break
 
