@@ -2,10 +2,13 @@ package fantasy_chess
 
 import rl "vendor:raylib"
 import "base"
+import "core:strconv"
+import "core:strings"
 
 board : Board
 selected_tile : ^Tile
 TILE_SCALE_FACTOR :f32: 2
+board_letters_lookup : [8]string = { "A", "B", "C", "D", "E", "F", "G", "H" }
 
 
 setup_board :: proc(){
@@ -20,10 +23,21 @@ setup_board :: proc(){
 }
 
 setup_tile :: proc(X, Y: int) -> Tile {
+	using strings
+	using strconv
+	
 	t: Tile
 	
-	t.id = (X + Y)
+	// t.id = (X + Y)
+	temp_buf: [4]byte
+	temp_id : [2]string = { board_letters_lookup[X], itoa(temp_buf[:], Y+1)}
+	t.id = join(temp_id[:], "-")
 	
+	x_buf: [2]byte
+	y_buf: [2]byte
+	temp_coords : [2]string = { itoa(x_buf[:], X+1), itoa(y_buf[:], Y+1) }
+	t.boads_coords = join(temp_coords[:], "-")
+		
 	// t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 6 + f32((Y * 68)) }	
 	t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 1.2 - f32((Y * 68)) }	
 	t.spr.SCALE_FACTOR = TILE_SCALE_FACTOR
@@ -45,10 +59,66 @@ setup_tile :: proc(X, Y: int) -> Tile {
 	t.hitbox = { t.pos.x - t.spr.src.width * t.spr.SCALE_FACTOR / 2, t.pos.y - t.spr.src.height * t.spr.SCALE_FACTOR / 2, t.spr.dest.width, t.spr.dest.height }
 	t.state = .idle
 
+	t.piece_on_tile = nil
+
 	return t
 }
 
-update_board :: proc() {
+update_board :: proc() 
+{
+	handle_selected_tile_piece()
+}
+
+handle_selected_tile_piece :: proc()
+{	
+	using strconv 
+	
+	if selected_tile == nil 
+	{
+		return
+	}
+
+	if selected_tile.piece_on_tile == nil
+	{
+		return
+	}
+	
+	switch selected_tile.piece_on_tile.type
+	{
+		case .PAWN:
+			if selected_tile.piece_on_tile.e_color == .WHITE
+			{
+				tile_coords := strings.split(selected_tile.boads_coords, "-")
+				x := atoi(tile_coords[0])
+				y := atoi(tile_coords[1]) + 1
+				t := &board.tiles[x-1][y-1]
+				t.state = .highlighted
+			}
+			else if selected_tile.piece_on_tile.e_color == .BLACK
+			{
+				tile_coords := strings.split(selected_tile.boads_coords, "-")
+				x := atoi(tile_coords[0])
+				y := atoi(tile_coords[1]) - 2
+				t := &board.tiles[x-1][y-1]
+				t.state = .highlighted
+			}
+		break
+
+		case .ROOK:
+		break
+
+		case .KNIGHT:
+		break
+
+		case .BISHOP:
+		break
+
+		case .QUEEN:
+		break
+
+		case .KING:
+		break
+	}
 	
 }
 
@@ -131,23 +201,7 @@ render_board_tiles :: proc()
 			// drawing chess nomenclatures
 			if y == 0 
 			{	
-				if x == 0 {
-					DrawText("A", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
-				} else if x == 1 {
-					DrawText("B", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
-				} else if x == 2 {
-					DrawText("C", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
-				} else if x == 3 {
-					DrawText("D", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
-				} else if x == 4 {
-					DrawText("E", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
-				} else if x == 5 {
-					DrawText("F", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
-				} else if x == 6 {
-					DrawText("G", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
-				} else if x == 7 {
-					DrawText("H", i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
-				}
+				DrawText(TextFormat("%s", board_letters_lookup[x]), i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
 			}
 
 			if x == 0

@@ -14,19 +14,19 @@ SRC_TILE_BLACK_SELECTED			:: rl.Rectangle{ 141, 99, 36, 36 }
 SRC_TILE_BLACK_MOVES			:: rl.Rectangle{ 35, 100, 36, 36 }
 
 
-SRC_WHITE_PAWN		:: rl.Rectangle
-SRC_WHITE_KNIGHT	:: rl.Rectangle
-SRC_WHITE_BISHIP	:: rl.Rectangle
-SRC_WHITE_ROOK		:: rl.Rectangle
-SRC_WHITE_QUEEN		:: rl.Rectangle
-SRC_WHITE_KING		:: rl.Rectangle
+SRC_WHITE_PAWN		:: rl.Rectangle{ 0, 48, 32, 48 }
+SRC_WHITE_KNIGHT	:: rl.Rectangle{ 32, 48, 32, 48 }
+SRC_WHITE_BISHOP	:: rl.Rectangle{ 64, 48, 32, 48 }
+SRC_WHITE_ROOK		:: rl.Rectangle{ 96, 48, 32, 48 }
+SRC_WHITE_QUEEN		:: rl.Rectangle{ 128, 48, 32, 48 }
+SRC_WHITE_KING		:: rl.Rectangle{ 160, 48, 32, 48 }
 
-SRC_BLACK_PAWN		:: rl.Rectangle
-SRC_BLACK_KNIGHT	:: rl.Rectangle
-SRC_BLACK_BISHIP	:: rl.Rectangle
-SRC_BLACK_ROOK		:: rl.Rectangle
-SRC_BLACK_QUEEN		:: rl.Rectangle
-SRC_BLACK_KING		:: rl.Rectangle
+SRC_BLACK_PAWN		:: rl.Rectangle{ 0, 0, 32, 48 }
+SRC_BLACK_KNIGHT	:: rl.Rectangle{ 32, 0, 32, 48 }
+SRC_BLACK_BISHOP	:: rl.Rectangle{ 64, 0, 32, 48 }
+SRC_BLACK_ROOK		:: rl.Rectangle{ 96, 0, 32, 48 }
+SRC_BLACK_QUEEN		:: rl.Rectangle{ 128, 0, 32, 48 }
+SRC_BLACK_KING		:: rl.Rectangle{ 160, 0, 32, 48 }
 
 load_all_textures :: proc() {
 	using rl

@@ -19,6 +19,7 @@ update_gameplay :: proc() {
     {   
         update_check_mouse_collision()
         update_board()
+        update_pieces()
     }
     else 
     {
@@ -31,6 +32,7 @@ render_gameplay :: proc(){
 
     // render_background()
     render_board()
+    render_pieces()
        
     if is_paused && ((pause_blink_counter / 30) % 2 == 0)
     {

@@ -17,22 +17,41 @@ Tile_state :: enum {
 }
 
 Ent_Color :: enum {
-    BLACK,
-    WHITE,
-    NONE,
+    BLACK = 0,
+    WHITE = 1,
+    NONE = 2,
 }
 
 Tile :: struct {
-    id: int,
+    id: string,
+    boads_coords: string,
     spr: Sprite,
     pos: rl.Vector2,
     hitbox: rl.Rectangle,
     state: Tile_state,
     e_color: Ent_Color,
+    piece_on_tile: ^Piece,
 }
 
 Board :: struct {
     tiles: [8][8]Tile,
+}
+
+Piece_Type :: enum {
+    PAWN,
+    ROOK,
+    KNIGHT,
+    BISHOP,
+    QUEEN,
+    KING,
+}
+
+Piece :: struct {
+    id: string,
+    spr: Sprite,
+    pos: rl.Vector2,
+    type: Piece_Type,
+    e_color: Ent_Color,
 }
 
 Entity :: struct {

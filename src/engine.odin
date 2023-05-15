@@ -13,6 +13,7 @@ initialize_engine :: proc(){
     setup_background()
 
     setup_board()
+    setup_start_pieces()
     // setup_buttons()
     // set_btn_pos(&buttons[0], rl.Vector2{ 400, 700})
     // set_btn_pos(&buttons[1], rl.Vector2{ 600, 700})

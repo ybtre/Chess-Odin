@@ -19,6 +19,9 @@ update_check_mouse_collision :: proc()
 					t.state = .highlighted
 				}
 				DrawText(TextFormat("HOVERING TILE: %i, %i", x, y), 20, 70, 30, GRAY)
+				DrawText(TextFormat("TILE ID: %s", t.id), 20, 100, 30, GRAY)
+				DrawText(TextFormat("TILE COORDS: %s", t.boads_coords), 20, 130, 30, GRAY)
+				DrawText(TextFormat("PIECE ID: %s", t.piece_on_tile.id), 20, 160, 30, GRAY)
 
 				if IsMouseButtonPressed(MouseButton.LEFT)
 				{
