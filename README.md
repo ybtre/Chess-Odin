@@ -3,7 +3,7 @@ Log of the process of creating a simple local 2 player chess game using free ass
 <details>
   <summary> Plan </summary>
 
-  #### 1 month long project split into progress weeks
+  ### 1 month long project split into progress weeks
   
   ##### Week 1 - 1.06 - 8.06
     1. Implement FEN notation for setting up board
@@ -20,17 +20,17 @@ Log of the process of creating a simple local 2 player chess game using free ass
 
 <details>
   <summary> Log </summary>
-  ## 31.05.23
-  1. refactoring to remove unneeded files
-  2. readme update with log and plan
-  3. first draft of plan
+  #### 31.05.23
+    1. refactoring to remove unneeded files
+    2. readme update with log and plan
+    3. first draft of plan
 
 </details>
 
 <details>
   <summary> Credits </summary>
-  - Raylib            - https://raylib.com/
-  - Odin Language     - https://odin-lang.org/
-  - Heroes Chess      - https://nulltale.itch.io/heroes-chess/
+    - Raylib            - https://raylib.com/
+    - Odin Language     - https://odin-lang.org/
+    - Heroes Chess      - https://nulltale.itch.io/heroes-chess/
 
 </details>
