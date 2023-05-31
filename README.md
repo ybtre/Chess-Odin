@@ -14,12 +14,12 @@ Log of the process of creating a simple local 2 player chess game using free ass
     4. Implement special cases (en passant, castling, check blocking)
     5. Refactor and Postmortem time, what can be improved and how?
 
-    <details>
-      <summary> Resources uses </summary>
-      
-      - https://www.chess.com/terms/fen-chess
+  <details>
+    <summary> Resources uses </summary>
+    
+    - https://www.chess.com/terms/fen-chess
 
-    </details>
+  </details>
 
   ##### Week 2 - 09.06 - 16.06
   #### Implement Easings and feel, give users feedback
