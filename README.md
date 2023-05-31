@@ -3,16 +3,34 @@ Log of the process of creating a simple local 2 player chess game using free ass
 <details>
   <summary> Plan </summary>
 
-  ### Head
-  1. m
-    * b
+  #### 1 month long project split into progress weeks
+  
+  ##### Week 1 - 1.06 - 8.06
+    1. Implement FEN notation for setting up board
+    - "animate" placing of pieces using a step counter(1 piece per half second interval)
+    2. Implement turns and figure out game overlord tracking? 
+    3. Calculate and implement piece movement
+    4. Implement special cases (en passant, castling, check blocking)
+    5. Refactor and Postmortem time, what can be improved and how?
 
+  ##### Week 2 - 09.06 - 16.06
+    
+  
 </details>
 
 <details>
   <summary> Log </summary>
-  # 31.05.23
-  - refactoring to remove unneeded files
-  - readme update with log and plan
+  ## 31.05.23
+  1. refactoring to remove unneeded files
+  2. readme update with log and plan
+  3. first draft of plan
+
+</details>
+
+<details>
+  <summary> Credits </summary>
+  - Raylib            - https://raylib.com/
+  - Odin Language     - https://odin-lang.org/
+  - Heroes Chess      - https://nulltale.itch.io/heroes-chess/
 
 </details>
