@@ -20,6 +20,7 @@ Log of the process of creating a simple local 2 player chess game using free ass
 
 <details>
   <summary> Log </summary>
+  
   #### 31.05.23
     1. refactoring to remove unneeded files
     2. readme update with log and plan
@@ -29,8 +30,9 @@ Log of the process of creating a simple local 2 player chess game using free ass
 
 <details>
   <summary> Credits </summary>
-    - Raylib            - https://raylib.com/
-    - Odin Language     - https://odin-lang.org/
-    - Heroes Chess      - https://nulltale.itch.io/heroes-chess/
+  
+    - Raylib            : https://raylib.com/
+    - Odin Language     : https://odin-lang.org/
+    - Heroes Chess      : https://nulltale.itch.io/heroes-chess/
 
 </details>
