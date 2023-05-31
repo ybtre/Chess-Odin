@@ -1,4 +1,10 @@
-# Entry for Ludum Dare 53 extra category. Theme is Deliver
+Log of the process of creating a simple local 2 player chess game using free assets found online
 
-### https://odin-lang.org
-### https://pkg.odin-lang.org/vendor/raylib
+<details>
+  <summary> Plan </summary>
+
+  ### Head
+  1. m
+    * b
+
+</details>
