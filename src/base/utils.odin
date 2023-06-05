@@ -2,6 +2,33 @@ package base
 
 import "core:math"
 import rl "vendor:raylib"
+import "core:fmt"
+import "core:strings"
+
+atoc :: proc(STR : string, INDEX : int) -> string
+{
+    using strings
+    
+    builder := builder_make(context.allocator)
+    result : string
+    write_rune(&builder, rune(STR[INDEX]))
+    result = to_string(builder)
+    builder_reset(&builder)
+    
+    return result    
+}
+
+rtoa :: proc(R : rune) -> string
+{
+    using strings
+
+    builder := builder_make(context.allocator)
+    write_rune(&builder, R)
+    result := to_string(builder)
+    builder_reset(&builder)
+
+    return result
+}
 
 update_sprite_dest :: proc(NEW_POS: rl.Vector2, DEST: rl.Rectangle) -> rl.Rectangle {
     return { NEW_POS.x, NEW_POS.y, DEST.width, DEST.height }

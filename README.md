@@ -7,10 +7,10 @@ Log of the process of creating a simple local 2 player chess game using free ass
   
   ##### Week 1 - 1.06 - 8.06
   #### Implement Basic Gameplay rules and sprites
-    1. Implement FEN notation for setting up board
+    1. @DONE Implement FEN notation for setting up board
     - "animate" placing of pieces using a step counter(1 piece per half second interval)
-    2. Implement turns and figure out game overlord tracking? 
-    3. Calculate and implement piece movement
+    2. Calculate and implement piece movement
+    3. Implement turns and figure out game overlord tracking? 
     4. Implement special cases (en passant, castling, check blocking)
     5. Refactor and Postmortem time, what can be improved and how?
 

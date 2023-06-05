@@ -10,6 +10,7 @@ selected_tile : ^Tile
 TILE_SCALE_FACTOR :f32: 2
 board_letters_lookup : [8]string = { "A", "B", "C", "D", "E", "F", "G", "H" }
 
+FEN_code : string = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
 
 setup_board :: proc(){
 	using rl
@@ -37,7 +38,7 @@ setup_tile :: proc(X, Y: int) -> Tile {
 	y_buf: [2]byte
 	temp_coords : [2]string = { itoa(x_buf[:], X+1), itoa(y_buf[:], Y+1) }
 	t.boads_coords = join(temp_coords[:], "-")
-		
+
 	// t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 6 + f32((Y * 68)) }	
 	t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 1.2 - f32((Y * 68)) }	
 	t.spr.SCALE_FACTOR = TILE_SCALE_FACTOR
