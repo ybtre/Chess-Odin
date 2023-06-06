@@ -5,12 +5,15 @@ import "base"
 import "core:strconv"
 import "core:strings"
 
-board : Board
-selected_tile : ^Tile
-TILE_SCALE_FACTOR :f32: 2
-board_letters_lookup : [8]string = { "A", "B", "C", "D", "E", "F", "G", "H" }
+board 					: Board
+selected_tile 			: ^Tile
+TILE_SCALE_FACTOR 		:f32: 2
+board_letters_lookup 	: [8]string = { "A", "B", "C", "D", "E", "F", "G", "H" }
 
-FEN_code : string = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
+possible_moves 			:= make([dynamic]^Tile)
+// possible_moves			: [32]^Tile
+
+FEN_code : string = "1nbqkbnr/pppppppp/8/3r4/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 setup_board :: proc(){
 	using rl
@@ -68,6 +71,7 @@ setup_tile :: proc(X, Y: int) -> Tile {
 update_board :: proc() 
 {
 	handle_selected_tile_piece()
+	handle_possible_moves()
 }
 
 handle_selected_tile_piece :: proc()
@@ -83,30 +87,56 @@ handle_selected_tile_piece :: proc()
 	{
 		return
 	}
+
+	
+	tile_coords := strings.split(selected_tile.boads_coords, "-")
+	x_moves := make([dynamic]int)
+	defer delete(x_moves)
+	y_moves := make([dynamic]int)
+	defer delete(y_moves)
 	
 	switch selected_tile.piece_on_tile.type
 	{	
 		//@Incomplete: need to make separate []^Board.Tiles for each tile state
 		case .PAWN:
 			if selected_tile.piece_on_tile.e_color == .WHITE
-			{
-				tile_coords := strings.split(selected_tile.boads_coords, "-")
-				x := atoi(tile_coords[0])
-				y := atoi(tile_coords[1]) + 1
-				t := &board.tiles[x-1][y-1]
-				t.state = .moves
+			{	
+				if selected_tile.piece_on_tile.has_moved == false
+				{	
+					append(&y_moves, atoi(tile_coords[1]) + 2)
+					append(&y_moves, atoi(tile_coords[1]) + 1)
+				}
+				else 
+				{
+					append(&y_moves, atoi(tile_coords[1]) + 1)
+				}
 			}
 			else if selected_tile.piece_on_tile.e_color == .BLACK
 			{
-				tile_coords := strings.split(selected_tile.boads_coords, "-")
-				x := atoi(tile_coords[0])
-				y := atoi(tile_coords[1]) - 2
-				t := &board.tiles[x-1][y-1]
-				t.state = .moves
+				if selected_tile.piece_on_tile.has_moved == false
+				{
+					append(&y_moves, atoi(tile_coords[1]) - 2)
+					append(&y_moves, atoi(tile_coords[1]) - 1)
+				}
+				else 
+				{
+					append(&y_moves, atoi(tile_coords[1]) - 1)
+				}
 			}
 		break
 
 		case .ROOK:
+			for x_positive := atoi(tile_coords[0]) + 1; x_positive < 8; x_positive += 1
+			{	
+				//@FIX : the coordinates are messed up to go up to 8
+				tile_to_check := &board.tiles[x_positive][atoi(tile_coords[1])+1]
+				append(&x_moves, x_positive)
+			}
+			for x_negative := atoi(tile_coords[0]) - 1; x_negative > 0; x_negative -= 1
+			{	
+				tile_to_check := &board.tiles[x_negative][atoi(tile_coords[1])-1]
+				append(&x_moves, x_negative)
+			}
 		break
 
 		case .KNIGHT:
@@ -121,7 +151,49 @@ handle_selected_tile_piece :: proc()
 		case .KING:
 		break
 	}
+
+	for x in x_moves 
+	{	
+		if x - 1 < 0
+		{
+			continue
+		}
+		
+		t := &board.tiles[x-1][atoi(tile_coords[1]) - 1]
+		append(&possible_moves, t)
+	}
+	for y in y_moves
+	{
+		if y - 1 < 0
+		{
+			continue
+		}
+		
+		t := &board.tiles[atoi(tile_coords[0]) - 1][y-1]
+		append(&possible_moves, t)
+	}
 	
+}
+
+handle_possible_moves :: proc()
+{	
+	// @HACKY, should probably use a map instead of a [dynamic]array
+	defer clear(&possible_moves)
+	for x := 0; x < 8; x += 1 {
+		for y := 0; y < 8; y +=1
+		{
+			t := &board.tiles[x][y]
+			if t != selected_tile
+			{
+				t.state = .idle
+			} 
+		}
+	}
+	
+	for _,i in possible_moves
+	{
+		possible_moves[i].state = .moves
+	}
 }
 
 render_board :: proc() {
@@ -143,7 +215,7 @@ render_board_tiles :: proc()
 	for x in 0..<8 {
 		for y in 0..<8 
 		{
-			t := board.tiles[x][y]
+			t := &board.tiles[x][y]
 			switch t.state
 			{
 				case .idle:

@@ -17,9 +17,9 @@ update_gameplay :: proc() {
 
     if !is_paused
     {   
-        update_check_mouse_collision()
         update_board()
         update_pieces()
+        update_check_mouse_collision()
     }
     else 
     {

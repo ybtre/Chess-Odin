@@ -25,167 +25,175 @@ setup_start_pieces_fen :: proc()
 	{	
 		for piece in pc
 		{
-			if total_counter > 32
+			if total_counter <= 32
 			{
-				println("OVER 32")
-				return
-			}
+				if piece  == 'r'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
 
-			if piece  == 'r'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
+					p.type = .ROOK
+					p.e_color = .BLACK
+					p.spr.src = SRC_BLACK_ROOK
+					setup_piece_common(p, t)
+					total_counter += 1
+				}
+				if piece == 'R'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
 
-				p.type = .ROOK
-				p.e_color = .BLACK
-				p.spr.src = SRC_BLACK_ROOK
-				setup_piece_common(p, t)
-				total_counter += 1
-			}
-			if piece == 'R'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
+					p.type = .ROOK
+					p.e_color = .WHITE
+					p.spr.src = SRC_WHITE_ROOK
+					setup_piece_common(p, t)
+					total_counter += 1
+				}
+				if piece == 'n'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
 
-				p.type = .ROOK
-				p.e_color = .WHITE
-				p.spr.src = SRC_WHITE_ROOK
-				setup_piece_common(p, t)
-				total_counter += 1
-			}
-			if piece == 'n'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
+					p.type = .KNIGHT
+					p.e_color = .BLACK
+					p.spr.src = SRC_BLACK_KNIGHT
+					setup_piece_common(p, t)
+					total_counter += 1
+				}
+				if piece == 'N'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
 
-				p.type = .KNIGHT
-				p.e_color = .BLACK
-				p.spr.src = SRC_BLACK_KNIGHT
-				setup_piece_common(p, t)
-				total_counter += 1
-			}
-			if piece == 'N'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
+					p.type = .KNIGHT
+					p.e_color = .WHITE
+					p.spr.src = SRC_WHITE_KNIGHT
+					setup_piece_common(p, t)
+					total_counter += 1
+				}
+				if piece == 'b'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
+					total_counter += 1
 
-				p.type = .KNIGHT
-				p.e_color = .WHITE
-				p.spr.src = SRC_WHITE_KNIGHT
-				setup_piece_common(p, t)
-				total_counter += 1
-			}
-			if piece == 'b'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
-				total_counter += 1
+					p.type = .BISHOP
+					p.e_color = .BLACK
+					p.spr.src = SRC_BLACK_BISHOP
+					setup_piece_common(p, t)
+				}
+				if piece == 'B'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
+					total_counter += 1
 
-				p.type = .BISHOP
-				p.e_color = .BLACK
-				p.spr.src = SRC_BLACK_BISHOP
-				setup_piece_common(p, t)
-			}
-			if piece == 'B'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
-				total_counter += 1
+					p.type = .BISHOP
+					p.e_color = .WHITE
+					p.spr.src = SRC_WHITE_BISHOP
+					setup_piece_common(p, t)
+				}
+				if piece == 'q'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
+					total_counter += 1
 
-				p.type = .BISHOP
-				p.e_color = .WHITE
-				p.spr.src = SRC_WHITE_BISHOP
-				setup_piece_common(p, t)
-			}
-			if piece == 'q'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
-				total_counter += 1
+					p.type = .QUEEN
+					p.e_color = .BLACK
+					p.spr.src = SRC_BLACK_QUEEN				
+					setup_piece_common(p, t)
+				}
+				if piece == 'Q'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
+					total_counter += 1
 
-				p.type = .QUEEN
-				p.e_color = .BLACK
-				p.spr.src = SRC_BLACK_QUEEN				
-				setup_piece_common(p, t)
-			}
-			if piece == 'Q'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
-				total_counter += 1
+					p.type = .QUEEN
+					p.e_color = .WHITE
+					p.spr.src = SRC_WHITE_QUEEN
+					setup_piece_common(p, t)
+				}
+				if piece == 'k'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
+					total_counter += 1
 
-				p.type = .QUEEN
-				p.e_color = .WHITE
-				p.spr.src = SRC_WHITE_QUEEN
-				setup_piece_common(p, t)
-			}
-			if piece == 'k'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
-				total_counter += 1
+					p.type = .KING
+					p.e_color = .BLACK
+					p.spr.src = SRC_BLACK_KING				
+					setup_piece_common(p, t)
+				}
+				if piece == 'K'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
+					total_counter += 1
 
-				p.type = .KING
-				p.e_color = .BLACK
-				p.spr.src = SRC_BLACK_KING				
-				setup_piece_common(p, t)
-			}
-			if piece == 'K'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
-				total_counter += 1
+					p.type = .KING
+					p.e_color = .WHITE
+					p.spr.src = SRC_WHITE_KING
+					setup_piece_common(p, t)
+				}
+				if piece == 'p'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
+					total_counter += 1
 
-				p.type = .KING
-				p.e_color = .WHITE
-				p.spr.src = SRC_WHITE_KING
-				setup_piece_common(p, t)
-			}
-			if piece == 'p'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
-				total_counter += 1
+					p.type = .PAWN
+					p.e_color = .BLACK
+					p.spr.src = SRC_BLACK_PAWN
+					setup_piece_common(p, t)
+				}
+				if piece == 'P'
+				{
+					p := &pieces[total_counter]
+					t := &board.tiles[file_counter][rank_counter]
+					total_counter += 1
 
-				p.type = .PAWN
-				p.e_color = .BLACK
-				p.spr.src = SRC_BLACK_PAWN
-				setup_piece_common(p, t)
-			}
-			if piece == 'P'
-			{
-				p := &pieces[total_counter]
-				t := &board.tiles[file_counter][rank_counter]
-				total_counter += 1
-
-				p.type = .PAWN
-				p.e_color = .WHITE
-				p.spr.src = SRC_WHITE_PAWN
-				setup_piece_common(p, t)
-			}
+					p.type = .PAWN
+					p.e_color = .WHITE
+					p.spr.src = SRC_WHITE_PAWN
+					setup_piece_common(p, t)
+				}
 			
-			if unicode.is_number(piece)
-			{
-				// println("NUMBER")
-				// println(piece)
-				file_counter += strconv.atoi(rtoa(piece))
-			}
-			else {
-				file_counter += 1
-			}
+				if unicode.is_number(piece)
+				{
+					// println("NUMBER")
+					// println(piece)
+					file_counter += strconv.atoi(rtoa(piece))
+				}
+				else {
+					file_counter += 1
+				}
 			
-			if file_counter > 7
-			{
-				rank_counter -= 1
-			}
+				if file_counter > 7
+				{
+					rank_counter -= 1
+				}
 
-			if file_counter >= 8
-			{
-				file_counter = 0
+				if file_counter >= 8
+				{
+					file_counter = 0
+				}
+				if rank_counter >= 8
+				{
+					rank_counter = 0
+				}
 			}
-			if rank_counter >= 8
+			else if total_counter == 33
 			{
-				rank_counter = 0
+				if piece == 'b'	
+				{
+					is_black_turn = false
+				}
+				if piece == 'w'
+				{
+					is_black_turn = true
+				}
 			}
 		}		
 	}	
@@ -204,6 +212,9 @@ setup_piece_common :: proc(P: ^Piece, T: ^Tile)
 	temp_id : [2]string = { piece_type_to_str(P.type), strconv.itoa(temp_buf[:], int(rl.GetRandomValue(0, 32767)))}
 	
 	P.id = strings.join(temp_id[:], "-")	
+
+	P.has_moved = false
+	
 	T.piece_on_tile = P 
 }
 

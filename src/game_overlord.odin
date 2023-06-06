@@ -10,6 +10,8 @@ pause_blink_counter := 0
 gameplay_time_total : f32 = 0.0
 gameplay_time_current := 0.0
 
+is_black_turn := false
+
 SCREENS :: enum {
     MAIN_MENU,
     GAMEPLAY,
