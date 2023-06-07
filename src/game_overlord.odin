@@ -21,8 +21,14 @@ SCREENS :: enum {
 startup_game_overlord :: proc(){
     current_screen = SCREENS.MAIN_MENU
     is_paused = false
+    is_black_turn = false
 }
 
 reset_game :: proc(){
     is_paused = false
+}
+
+switch_player :: proc()
+{
+    is_black_turn = !is_black_turn
 }

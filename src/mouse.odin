@@ -2,6 +2,7 @@ package fantasy_chess
 
 import rl "vendor:raylib"
 import "base"
+import "core:fmt"
 
 update_check_mouse_collision :: proc() 
 {
@@ -14,7 +15,7 @@ update_check_mouse_collision :: proc()
 			
 			if CheckCollisionPointRec(GetMousePosition(), t.hitbox)
 			{
-				if t.state != .selected 
+				if t.state != .selected && t.state != .moves 
 				{ 
 					t.state = .highlighted
 				}
@@ -26,13 +27,25 @@ update_check_mouse_collision :: proc()
 				DrawText(TextFormat("PIECE: %s", t.piece_on_tile), 20, 190, 30, GRAY)
 
 				if IsMouseButtonPressed(MouseButton.LEFT)
-				{
+				{	
 					if selected_tile != nil
 					{ 
-						selected_tile.state = .idle
-						selected_tile = nil 
+						if selected_tile.piece_on_tile != nil
+						{
+							if t.state == .moves
+							{
+								fmt.println("MOVE")
+								move_piece(selected_tile.piece_on_tile, t, selected_tile)
+							}
+						}
+						else {
+							selected_tile.state = .idle
+							selected_tile = nil 
+						}
+						
 						clear(&possible_moves)
 					}
+					
 					t.state = .selected
 					selected_tile = t
 				}

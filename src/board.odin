@@ -70,11 +70,11 @@ setup_tile :: proc(X, Y: int) -> Tile {
 
 update_board :: proc() 
 {
-	handle_selected_tile_piece()
-	handle_possible_moves()
+	calculate_selected_piece_possible_moves()
+	apply_possible_moves()
 }
 
-handle_selected_tile_piece :: proc()
+calculate_selected_piece_possible_moves :: proc()
 {	
 	using strconv 
 	
@@ -94,48 +94,137 @@ handle_selected_tile_piece :: proc()
 	defer delete(x_moves)
 	y_moves := make([dynamic]int)
 	defer delete(y_moves)
-	
+
 	switch selected_tile.piece_on_tile.type
 	{	
+		//@Weird: tile coords is already + 1 from board.tiles, hence negative check is -2, positive check does not change
 		//@Incomplete: need to make separate []^Board.Tiles for each tile state
 		case .PAWN:
-			if selected_tile.piece_on_tile.e_color == .WHITE
+			if selected_tile.piece_on_tile.e_color == .WHITE && is_black_turn == false
 			{	
 				if selected_tile.piece_on_tile.has_moved == false
 				{	
-					append(&y_moves, atoi(tile_coords[1]) + 2)
 					append(&y_moves, atoi(tile_coords[1]) + 1)
+					append(&y_moves, atoi(tile_coords[1]))
 				}
 				else 
 				{
-					append(&y_moves, atoi(tile_coords[1]) + 1)
+					append(&y_moves, atoi(tile_coords[1]))
 				}
 			}
-			else if selected_tile.piece_on_tile.e_color == .BLACK
+			if selected_tile.piece_on_tile.e_color == .BLACK && is_black_turn == true
 			{
 				if selected_tile.piece_on_tile.has_moved == false
 				{
+					append(&y_moves, atoi(tile_coords[1]) - 3)
 					append(&y_moves, atoi(tile_coords[1]) - 2)
-					append(&y_moves, atoi(tile_coords[1]) - 1)
 				}
 				else 
 				{
-					append(&y_moves, atoi(tile_coords[1]) - 1)
+					append(&y_moves, atoi(tile_coords[1]))
 				}
 			}
 		break
 
 		case .ROOK:
-			for x_positive := atoi(tile_coords[0]) + 1; x_positive < 8; x_positive += 1
-			{	
-				//@FIX : the coordinates are messed up to go up to 8
-				tile_to_check := &board.tiles[x_positive][atoi(tile_coords[1])+1]
-				append(&x_moves, x_positive)
+			if selected_tile.piece_on_tile.e_color == .WHITE && is_black_turn == false
+			{
+				//check right
+				for x := atoi(tile_coords[0]); x < 8; x += 1
+				{	
+					//@FIX : the coordinates are messed up to go up to 8
+					tile_to_check := &board.tiles[x][atoi(tile_coords[1])-1]
+					if tile_to_check.piece_on_tile != nil
+					{
+						break
+					}
+				
+					append(&x_moves, x)
+				}
+				//check left
+				for x := atoi(tile_coords[0]) - 2; x >= 0; x -= 1
+				{	
+					tile_to_check := &board.tiles[x][atoi(tile_coords[1])-1]
+					if tile_to_check.piece_on_tile != nil
+					{
+						break
+					}
+				
+					append(&x_moves, x)
+				}
+				//check up
+				for y := atoi(tile_coords[1]); y < 8; y += 1
+				{	
+					//@FIX : the coordinates are messed up to go up to 8
+					tile_to_check := &board.tiles[atoi(tile_coords[1])-1][y]
+					if tile_to_check.piece_on_tile != nil
+					{
+						break
+					}
+				
+					append(&y_moves, y)
+				}
+				//check down 
+				for y := atoi(tile_coords[1]) - 2; y >= 0; y -= 1
+				{	
+					tile_to_check := &board.tiles[atoi(tile_coords[1])-1][y]
+					if tile_to_check.piece_on_tile != nil
+					{
+						break
+					}
+				
+					append(&y_moves, y)
+				}
 			}
-			for x_negative := atoi(tile_coords[0]) - 1; x_negative > 0; x_negative -= 1
-			{	
-				tile_to_check := &board.tiles[x_negative][atoi(tile_coords[1])-1]
-				append(&x_moves, x_negative)
+			
+			if selected_tile.piece_on_tile.e_color == .BLACK && is_black_turn == true
+			{
+				//check right
+				for x := atoi(tile_coords[0]); x < 8; x += 1
+				{	
+					//@FIX : the coordinates are messed up to go up to 8
+					tile_to_check := &board.tiles[x][atoi(tile_coords[1])-1]
+					if tile_to_check.piece_on_tile != nil
+					{
+						break
+					}
+				
+					append(&x_moves, x)
+				}
+				//check left
+				for x := atoi(tile_coords[0]) - 2; x >= 0; x -= 1
+				{	
+					tile_to_check := &board.tiles[x][atoi(tile_coords[1])-1]
+					if tile_to_check.piece_on_tile != nil
+					{
+						break
+					}
+				
+					append(&x_moves, x)
+				}
+				//check up
+				for y := atoi(tile_coords[1]); y < 8; y += 1
+				{	
+					//@FIX : the coordinates are messed up to go up to 8
+					tile_to_check := &board.tiles[atoi(tile_coords[1])-1][y]
+					if tile_to_check.piece_on_tile != nil
+					{
+						break
+					}
+				
+					append(&y_moves, y)
+				}
+				//check down 
+				for y := atoi(tile_coords[1]) - 2; y >= 0; y -= 1
+				{	
+					tile_to_check := &board.tiles[atoi(tile_coords[1])-1][y]
+					if tile_to_check.piece_on_tile != nil
+					{
+						break
+					}
+				
+					append(&y_moves, y)
+				}
 			}
 		break
 
@@ -154,13 +243,13 @@ handle_selected_tile_piece :: proc()
 
 	for x in x_moves 
 	{	
-		if x - 1 < 0
-		{
-			continue
-		}
-		
-		t := &board.tiles[x-1][atoi(tile_coords[1]) - 1]
+		// if x - 1 < 0
+		// {
+		// 	continue
+		// }
+		t := &board.tiles[x][atoi(tile_coords[1]) - 1]
 		append(&possible_moves, t)
+		// append(&possible_moves, &board.tiles[0][atoi(tile_coords[1]) - 1])
 	}
 	for y in y_moves
 	{
@@ -169,13 +258,13 @@ handle_selected_tile_piece :: proc()
 			continue
 		}
 		
-		t := &board.tiles[atoi(tile_coords[0]) - 1][y-1]
+		t := &board.tiles[atoi(tile_coords[0]) - 1][y]
 		append(&possible_moves, t)
 	}
 	
 }
 
-handle_possible_moves :: proc()
+apply_possible_moves :: proc()
 {	
 	// @HACKY, should probably use a map instead of a [dynamic]array
 	defer clear(&possible_moves)
@@ -189,8 +278,8 @@ handle_possible_moves :: proc()
 			} 
 		}
 	}
-	
-	for _,i in possible_moves
+
+	for i := 0; i < len(possible_moves); i+=1
 	{
 		possible_moves[i].state = .moves
 	}
@@ -309,4 +398,17 @@ update_tile_hitbox_pos :: proc(TILE: ^Tile) {
 
 update_tile_sprite_dest :: proc(TILE: ^Tile) {
     TILE.spr.dest = { TILE.pos.x, TILE.pos.y, TILE.spr.dest.width, TILE.spr.dest.height }
+}
+
+tile_coords_atoi :: proc(TILE : ^Tile) -> [2]int
+{	
+	using strconv
+	
+	string_coords := strings.split(TILE.boads_coords, "-")
+	
+	coords : [2]int
+	coords[0] = atoi(string_coords[0])
+	coords[1] = atoi(string_coords[1])
+	
+	return coords
 }

@@ -247,6 +247,25 @@ piece_type_to_str :: proc(TYPE : Piece_Type) -> string
 	return result
 }
 
+move_piece :: proc(PIECE : ^Piece, NEW_T, OLD_T: ^Tile)
+{
+	if NEW_T.piece_on_tile != nil
+	{
+		fmt.println("TAKEN")
+	}
+
+	if NEW_T.piece_on_tile == nil
+	{
+		fmt.println("FREE")
+		
+		OLD_T.piece_on_tile = nil
+		setup_piece_common(PIECE, NEW_T)
+		PIECE.has_moved = true
+
+		switch_player()
+	}
+}
+
 update_pieces :: proc() 
 {
 	for piece in pieces 

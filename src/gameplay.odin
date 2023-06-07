@@ -11,6 +11,8 @@ update_gameplay :: proc() {
 
     spawn_timer += rl.GetFrameTime()
 
+	DrawText(TextFormat("%s TO MOVE", is_black_turn ? "BLACK" : "WHITE"), 20, 500, 30, GRAY)
+        
     if rl.IsKeyPressed(rl.KeyboardKey.P){
         is_paused = !is_paused
     }
