@@ -57,9 +57,6 @@ setup_game :: proc()
     // setup_start_pieces()
     setup_start_pieces_fen()
     // setup_buttons()
-    // set_btn_pos(&buttons[0], rl.Vector2{ 400, 700})
-    // set_btn_pos(&buttons[1], rl.Vector2{ 600, 700})
-    // set_btn_pos(&buttons[2], rl.Vector2{ 800, 700})
 }
 
 update_screens :: proc()

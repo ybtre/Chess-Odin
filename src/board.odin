@@ -6,14 +6,15 @@ import "core:strconv"
 import "core:strings"
 
 board 					: Board
-selected_tile 			: ^Tile
 TILE_SCALE_FACTOR 		:f32: 2
 board_letters_lookup 	: [8]string = { "A", "B", "C", "D", "E", "F", "G", "H" }
 
 possible_moves 			:= make([dynamic]^Tile)
+// possible_moves			:= make(map[^Tile]^Tile)
+// possible_moves 				:= make([dynamic][2]int)
 // possible_moves			: [32]^Tile
 
-FEN_code : string = "1nbqkbnr/pppppppp/8/3r4/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+FEN_code : string = "1nbqkbnr/pppppppp/8/3r4/5R2/8/PPPPPPPP/1NBQKBNR w KQkq - 0 1"
 
 setup_board :: proc(){
 	using rl
@@ -35,43 +36,132 @@ setup_tile :: proc(X, Y: int) -> Tile {
 	// t.id = (X + Y)
 	temp_buf: [4]byte
 	temp_id : [2]string = { board_letters_lookup[X], itoa(temp_buf[:], Y+1)}
-	t.id = join(temp_id[:], "-")
+	t.data.id = join(temp_id[:], "-")
 	
 	x_buf: [2]byte
 	y_buf: [2]byte
 	temp_coords : [2]string = { itoa(x_buf[:], X+1), itoa(y_buf[:], Y+1) }
-	t.boads_coords = join(temp_coords[:], "-")
+	t.data.board_coords = join(temp_coords[:], "-")
+	
+	t.data.tile_coords[0] = X
+	t.data.tile_coords[1] = Y
 
-	// t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 6 + f32((Y * 68)) }	
-	t.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 1.2 - f32((Y * 68)) }	
-	t.spr.SCALE_FACTOR = TILE_SCALE_FACTOR
+	// t.visuals.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 6 + f32((Y * 68)) }	
+	t.visuals.pos = { SCREEN.x / 3.2 + f32((X * 68)), SCREEN.y / 1.2 - f32((Y * 68)) }	
+	t.visuals.spr.SCALE_FACTOR = TILE_SCALE_FACTOR
 
 	if X % 2 == 0 && Y % 2 == 1 || X % 2 == 1 && Y % 2 == 0	
 	{
-		t.spr.src = SRC_TILE_WHITE
-		t.e_color = .WHITE
+		t.visuals.spr.src = SRC_TILE_WHITE
+		t.visuals.color = .WHITE
 	}
 	else if X % 2 == 0 && Y % 2 == 0 || X % 2 == 1 && Y % 2 == 1 
 	{
-		t.spr.src = SRC_TILE_BLACK
-		t.e_color = .BLACK
+		t.visuals.spr.src = SRC_TILE_BLACK
+		t.visuals.color = .BLACK
 	}
-	t.spr.dest = { t.pos.x, t.pos.y, t.spr.src.width * t.spr.SCALE_FACTOR, t.spr.src.height * t.spr.SCALE_FACTOR}
-	t.spr.center = { t.spr.src.width * t.spr.SCALE_FACTOR / 2, t.spr.src.height * t.spr.SCALE_FACTOR / 2 }
+	t.visuals.spr.dest = { t.visuals.pos.x, t.visuals.pos.y, t.visuals.spr.src.width * t.visuals.spr.SCALE_FACTOR, t.visuals.spr.src.height * t.visuals.spr.SCALE_FACTOR}
+	t.visuals.spr.center = { t.visuals.spr.src.width * t.visuals.spr.SCALE_FACTOR / 2, t.visuals.spr.src.height * t.visuals.spr.SCALE_FACTOR / 2 }
 
 
-	t.hitbox = { t.pos.x - t.spr.src.width * t.spr.SCALE_FACTOR / 2, t.pos.y - t.spr.src.height * t.spr.SCALE_FACTOR / 2, t.spr.dest.width, t.spr.dest.height }
-	t.state = .idle
+	t.visuals.hitbox = { t.visuals.pos.x - t.visuals.spr.src.width * t.visuals.spr.SCALE_FACTOR / 2, t.visuals.pos.y - t.visuals.spr.src.height * t.visuals.spr.SCALE_FACTOR / 2, t.visuals.spr.dest.width, t.visuals.spr.dest.height }
+	t.data.state = .IDLE
 
-	t.piece_on_tile = nil
+	t.data.piece = nil
 
 	return t
 }
 
-update_board :: proc() 
+possible_moves_calculate :: proc(T : ^Tile)
+{	
+	p := T.data.piece
+
+	if p.data.has_calculated_moves == false
+	{
+		tile_coords := T.data.tile_coords
+	
+		x_moves := make([dynamic]int)
+		defer delete(x_moves)
+		y_moves := make([dynamic]int)
+		defer delete(y_moves)
+	
+		switch p.data.type
+		{
+			case .PAWN:
+				if p.visuals.color == .WHITE
+				{
+					if p.data.has_moved == false
+					{	
+						append(&y_moves, tile_coords[1] + 2)
+						append(&y_moves, tile_coords[1] + 1)
+					}
+					else 
+					{
+						append(&y_moves, tile_coords[1] + 1)
+					}
+				}
+
+				if p.visuals.color == .BLACK
+				{
+					if p.data.has_moved == false
+					{
+						append(&y_moves, tile_coords[1] - 2)
+						append(&y_moves, tile_coords[1] - 1)
+					}
+					else 
+					{
+						append(&y_moves, tile_coords[1] - 1)
+					}
+				}
+				
+			break
+
+			case .ROOK:
+				vertical_check(tile_coords, p)
+			break
+
+			case .KNIGHT:
+				
+			break
+
+			case .BISHOP:
+				diagonal_check(tile_coords, p)
+			break
+
+			case .QUEEN:
+			break
+
+			case .KING:
+			break
+
+			case .NONE:
+			break
+		}
+	
+		for x in x_moves 
+		{	
+			t := &board.tiles[x][tile_coords[1]]
+			append(&possible_moves, t)
+		}
+		for y in y_moves
+		{
+			t := &board.tiles[tile_coords[0]][y]
+			append(&possible_moves, t)
+		}
+
+		p.data.has_calculated_moves = true
+	}
+}
+
+vertical_check :: proc(CURR_T_COORDS : [2]int, SELECTED_P : ^Piece)
 {
-	calculate_selected_piece_possible_moves()
-	apply_possible_moves()
+	//@Fix: tile highlighting!!!
+	
+}
+
+diagonal_check :: proc(CURR_T_COORDS : [2]int, SELECTED_P : ^Piece)
+{
+	
 }
 
 calculate_selected_piece_possible_moves :: proc()
@@ -83,26 +173,26 @@ calculate_selected_piece_possible_moves :: proc()
 		return
 	}
 
-	if selected_tile.piece_on_tile == nil
+	if selected_tile.data.piece == nil
 	{
 		return
 	}
 
 	
-	tile_coords := strings.split(selected_tile.boads_coords, "-")
+	tile_coords := strings.split(selected_tile.data.board_coords, "-")
 	x_moves := make([dynamic]int)
 	defer delete(x_moves)
 	y_moves := make([dynamic]int)
 	defer delete(y_moves)
 
-	switch selected_tile.piece_on_tile.type
+	switch selected_tile.data.piece.data.type
 	{	
 		//@Weird: tile coords is already + 1 from board.tiles, hence negative check is -2, positive check does not change
 		//@Incomplete: need to make separate []^Board.Tiles for each tile state
 		case .PAWN:
-			if selected_tile.piece_on_tile.e_color == .WHITE && is_black_turn == false
+			if selected_tile.data.piece.visuals.color == .WHITE && is_black_turn == false
 			{	
-				if selected_tile.piece_on_tile.has_moved == false
+				if selected_tile.data.piece.data.has_moved == false
 				{	
 					append(&y_moves, atoi(tile_coords[1]) + 1)
 					append(&y_moves, atoi(tile_coords[1]))
@@ -112,9 +202,9 @@ calculate_selected_piece_possible_moves :: proc()
 					append(&y_moves, atoi(tile_coords[1]))
 				}
 			}
-			if selected_tile.piece_on_tile.e_color == .BLACK && is_black_turn == true
+			if selected_tile.data.piece.visuals.color == .BLACK && is_black_turn == true
 			{
-				if selected_tile.piece_on_tile.has_moved == false
+				if selected_tile.data.piece.data.has_moved == false
 				{
 					append(&y_moves, atoi(tile_coords[1]) - 3)
 					append(&y_moves, atoi(tile_coords[1]) - 2)
@@ -127,14 +217,14 @@ calculate_selected_piece_possible_moves :: proc()
 		break
 
 		case .ROOK:
-			if selected_tile.piece_on_tile.e_color == .WHITE && is_black_turn == false
+			if selected_tile.data.piece.visuals.color == .WHITE && is_black_turn == false
 			{
 				//check right
 				for x := atoi(tile_coords[0]); x < 8; x += 1
 				{	
 					//@FIX : the coordinates are messed up to go up to 8
 					tile_to_check := &board.tiles[x][atoi(tile_coords[1])-1]
-					if tile_to_check.piece_on_tile != nil
+					if tile_to_check.data.piece != nil
 					{
 						break
 					}
@@ -145,7 +235,7 @@ calculate_selected_piece_possible_moves :: proc()
 				for x := atoi(tile_coords[0]) - 2; x >= 0; x -= 1
 				{	
 					tile_to_check := &board.tiles[x][atoi(tile_coords[1])-1]
-					if tile_to_check.piece_on_tile != nil
+					if tile_to_check.data.piece != nil
 					{
 						break
 					}
@@ -157,7 +247,7 @@ calculate_selected_piece_possible_moves :: proc()
 				{	
 					//@FIX : the coordinates are messed up to go up to 8
 					tile_to_check := &board.tiles[atoi(tile_coords[1])-1][y]
-					if tile_to_check.piece_on_tile != nil
+					if tile_to_check.data.piece != nil
 					{
 						break
 					}
@@ -168,7 +258,7 @@ calculate_selected_piece_possible_moves :: proc()
 				for y := atoi(tile_coords[1]) - 2; y >= 0; y -= 1
 				{	
 					tile_to_check := &board.tiles[atoi(tile_coords[1])-1][y]
-					if tile_to_check.piece_on_tile != nil
+					if tile_to_check.data.piece != nil
 					{
 						break
 					}
@@ -177,14 +267,14 @@ calculate_selected_piece_possible_moves :: proc()
 				}
 			}
 			
-			if selected_tile.piece_on_tile.e_color == .BLACK && is_black_turn == true
+			if selected_tile.data.piece.visuals.color == .BLACK && is_black_turn == true
 			{
 				//check right
 				for x := atoi(tile_coords[0]); x < 8; x += 1
 				{	
 					//@FIX : the coordinates are messed up to go up to 8
 					tile_to_check := &board.tiles[x][atoi(tile_coords[1])-1]
-					if tile_to_check.piece_on_tile != nil
+					if tile_to_check.data.piece != nil
 					{
 						break
 					}
@@ -195,7 +285,7 @@ calculate_selected_piece_possible_moves :: proc()
 				for x := atoi(tile_coords[0]) - 2; x >= 0; x -= 1
 				{	
 					tile_to_check := &board.tiles[x][atoi(tile_coords[1])-1]
-					if tile_to_check.piece_on_tile != nil
+					if tile_to_check.data.piece != nil
 					{
 						break
 					}
@@ -207,7 +297,7 @@ calculate_selected_piece_possible_moves :: proc()
 				{	
 					//@FIX : the coordinates are messed up to go up to 8
 					tile_to_check := &board.tiles[atoi(tile_coords[1])-1][y]
-					if tile_to_check.piece_on_tile != nil
+					if tile_to_check.data.piece != nil
 					{
 						break
 					}
@@ -218,7 +308,7 @@ calculate_selected_piece_possible_moves :: proc()
 				for y := atoi(tile_coords[1]) - 2; y >= 0; y -= 1
 				{	
 					tile_to_check := &board.tiles[atoi(tile_coords[1])-1][y]
-					if tile_to_check.piece_on_tile != nil
+					if tile_to_check.data.piece != nil
 					{
 						break
 					}
@@ -238,6 +328,9 @@ calculate_selected_piece_possible_moves :: proc()
 		break
 
 		case .KING:
+		break
+
+		case .NONE:
 		break
 	}
 
@@ -267,28 +360,38 @@ calculate_selected_piece_possible_moves :: proc()
 apply_possible_moves :: proc()
 {	
 	// @HACKY, should probably use a map instead of a [dynamic]array
-	defer clear(&possible_moves)
+	
 	for x := 0; x < 8; x += 1 {
 		for y := 0; y < 8; y +=1
 		{
 			t := &board.tiles[x][y]
 			if t != selected_tile
 			{
-				t.state = .idle
+				t.data.state = .IDLE
 			} 
 		}
 	}
 
 	for i := 0; i < len(possible_moves); i+=1
 	{
-		possible_moves[i].state = .moves
+		possible_moves[i].data.state = .AVAILABLE_MOVES
+	}
+}
+
+possible_moves_reset :: proc()
+{
+	defer clear(&possible_moves)
+	
+	for i := 0; i < len(possible_moves); i+=1
+	{
+		possible_moves[i].data.state = .IDLE
 	}
 }
 
 render_board :: proc() {
 	using rl
 
-	// tile.pos.x += 1
+	// TILE.visuals.pos.x += 1
 	// on_tile_pos_update(&tile)
 			
 	// DrawLine(i32(SCREEN.x) /2, 0, i32(SCREEN.x) /2, i32(SCREEN.y), RED)
@@ -305,57 +408,57 @@ render_board_tiles :: proc()
 		for y in 0..<8 
 		{
 			t := &board.tiles[x][y]
-			switch t.state
+			switch t.data.state
 			{
-				case .idle:
-					if t.e_color == .WHITE
+				case .IDLE:
+					if t.visuals.color == .WHITE
 					{
-						t.spr.src = SRC_TILE_WHITE
+						t.visuals.spr.src = SRC_TILE_WHITE
 					}
-					else if t.e_color == .BLACK 
+					else if t.visuals.color == .BLACK 
 					{
-						t.spr.src = SRC_TILE_BLACK
-					}
-					break
-
-				case .highlighted:
-					if t.e_color == .WHITE
-					{
-						t.spr.src = SRC_TILE_WHITE_HIGHLIGHTED
-					}
-					else if t.e_color == .BLACK 
-					{
-						t.spr.src = SRC_TILE_BLACK_HIGHLIGHTED
+						t.visuals.spr.src = SRC_TILE_BLACK
 					}
 					break
 
-				case .selected:
-					if t.e_color == .WHITE
+				case .HIGHLIGHTED:
+					if t.visuals.color == .WHITE
 					{
-						t.spr.src = SRC_TILE_WHITE_SELECTED
+						t.visuals.spr.src = SRC_TILE_WHITE_HIGHLIGHTED
 					}
-					else if t.e_color == .BLACK 
+					else if t.visuals.color == .BLACK 
 					{
-						t.spr.src = SRC_TILE_BLACK_SELECTED
+						t.visuals.spr.src = SRC_TILE_BLACK_HIGHLIGHTED
 					}
 					break
 
-				case .moves:
-					if t.e_color == .WHITE
+				case .SELECTED:
+					if t.visuals.color == .WHITE
 					{
-						t.spr.src = SRC_TILE_WHITE_MOVES
+						t.visuals.spr.src = SRC_TILE_WHITE_SELECTED
 					}
-					else if t.e_color == .BLACK 
+					else if t.visuals.color == .BLACK 
 					{
-						t.spr.src = SRC_TILE_BLACK_MOVES
+						t.visuals.spr.src = SRC_TILE_BLACK_SELECTED
+					}
+					break
+
+				case .AVAILABLE_MOVES:
+					if t.visuals.color == .WHITE
+					{
+						t.visuals.spr.src = SRC_TILE_WHITE_MOVES
+					}
+					else if t.visuals.color == .BLACK 
+					{
+						t.visuals.spr.src = SRC_TILE_BLACK_MOVES
 					}
 					break
 			}
 			DrawTexturePro(
 				TEX_SPRITESHEET, 
-				t.spr.src, 
-				t.spr.dest, 
-				t.spr.center, 
+				t.visuals.spr.src, 
+				t.visuals.spr.dest, 
+				t.visuals.spr.center, 
 				// f32(GetTime()) * 90,
 				0, 
 				WHITE)
@@ -364,12 +467,12 @@ render_board_tiles :: proc()
 			// drawing chess nomenclatures
 			if y == 0 
 			{	
-				DrawText(TextFormat("%s", board_letters_lookup[x]), i32(t.hitbox.x) + 25, i32(t.hitbox.y) + 70, 30, WHITE)
+				DrawText(TextFormat("%s", board_letters_lookup[x]), i32(t.visuals.hitbox.x) + 25, i32(t.visuals.hitbox.y) + 70, 30, WHITE)
 			}
 
 			if x == 0
 			{
-				DrawText(TextFormat("%i", y + 1), i32(t.hitbox.x) - 25, i32(t.hitbox.y) + 25, 30, WHITE)
+				DrawText(TextFormat("%i", y + 1), i32(t.visuals.hitbox.x) - 25, i32(t.visuals.hitbox.y) + 25, 30, WHITE)
 			}
 		}
 	}	
@@ -379,9 +482,9 @@ draw_board_tile :: proc(TILE: ^Tile)
 {
 	rl.DrawTexturePro(
 		TEX_SPRITESHEET, 
-		TILE.spr.src, 
-		TILE.spr.dest, 
-		TILE.spr.center, 
+		TILE.visuals.spr.src, 
+		TILE.visuals.spr.dest, 
+		TILE.visuals.spr.center, 
 		// f32(GetTime()) * 90,
 		0, 
 		rl.WHITE)
@@ -393,18 +496,18 @@ on_tile_pos_update :: proc(TILE: ^Tile) {
 }
 
 update_tile_hitbox_pos :: proc(TILE: ^Tile) {
-    TILE.hitbox = { TILE.pos.x - TILE.spr.src.width * TILE.spr.SCALE_FACTOR / 2, TILE.pos.y - TILE.spr.src.height * TILE.spr.SCALE_FACTOR / 2, TILE.spr.dest.width, TILE.spr.dest.height }
+    TILE.visuals.hitbox = { TILE.visuals.pos.x - TILE.visuals.spr.src.width * TILE.visuals.spr.SCALE_FACTOR / 2, TILE.visuals.pos.y - TILE.visuals.spr.src.height * TILE.visuals.spr.SCALE_FACTOR / 2, TILE.visuals.spr.dest.width, TILE.visuals.spr.dest.height }
 }
 
 update_tile_sprite_dest :: proc(TILE: ^Tile) {
-    TILE.spr.dest = { TILE.pos.x, TILE.pos.y, TILE.spr.dest.width, TILE.spr.dest.height }
+    TILE.visuals.spr.dest = { TILE.visuals.pos.x, TILE.visuals.pos.y, TILE.visuals.spr.dest.width, TILE.visuals.spr.dest.height }
 }
 
 tile_coords_atoi :: proc(TILE : ^Tile) -> [2]int
 {	
 	using strconv
 	
-	string_coords := strings.split(TILE.boads_coords, "-")
+	string_coords := strings.split(TILE.data.board_coords, "-")
 	
 	coords : [2]int
 	coords[0] = atoi(string_coords[0])

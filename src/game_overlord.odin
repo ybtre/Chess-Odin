@@ -11,6 +11,7 @@ gameplay_time_total : f32 = 0.0
 gameplay_time_current := 0.0
 
 is_black_turn := false
+turn_state : Faction = .WHITE
 
 SCREENS :: enum {
     MAIN_MENU,
@@ -21,7 +22,7 @@ SCREENS :: enum {
 startup_game_overlord :: proc(){
     current_screen = SCREENS.MAIN_MENU
     is_paused = false
-    is_black_turn = false
+    turn_state = .WHITE
 }
 
 reset_game :: proc(){
@@ -30,5 +31,12 @@ reset_game :: proc(){
 
 switch_player :: proc()
 {
-    is_black_turn = !is_black_turn
+    if turn_state == .BLACK
+    {
+        turn_state = .WHITE
+    }
+    else if turn_state == .WHITE
+    {
+        turn_state = .BLACK
+    }
 }

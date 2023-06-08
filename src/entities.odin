@@ -9,32 +9,54 @@ Sprite :: struct {
     SCALE_FACTOR     : f32,
 }
 
-Tile_state :: enum {
-    idle,
-    highlighted,
-    selected,
-    moves,
-}
-
-Ent_Color :: enum {
-    BLACK = 0,
-    WHITE = 1,
-    NONE = 2,
+Board :: struct {
+    tiles: [8][8]Tile,
 }
 
 Tile :: struct {
+    data           : Tile_Data,
+    visuals        : Tile_Visuals,
+}
+
+Tile_Data :: struct {
     id             : string,
-    boads_coords   : string,
+    board_coords   : string,
+    tile_coords    : [2]int,
+    state          : Tile_State,
+    piece          : ^Piece,
+}
+
+Tile_Visuals :: struct {
     spr            : Sprite,
     pos            : rl.Vector2,
     hitbox         : rl.Rectangle,
-    state          : Tile_state,
-    e_color        : Ent_Color,
-    piece_on_tile  : ^Piece,
+    color          : Faction,
 }
 
-Board :: struct {
-    tiles: [8][8]Tile,
+Tile_State :: enum {
+    IDLE,
+    HIGHLIGHTED,
+    SELECTED,
+    AVAILABLE_MOVES,
+}
+
+Piece :: struct {
+    data        : Piece_Data,
+    visuals     : Piece_Visuals,
+}
+
+Piece_Data :: struct {
+    id                    : string,
+    has_moved             : bool,
+    has_calculated_moves  : bool,
+    coords                : [2]int,
+    type                  : Piece_Type,
+}
+
+Piece_Visuals  :: struct {
+    spr         : Sprite,
+    pos         : rl.Vector2,
+    color       : Faction,
 }
 
 Piece_Type :: enum {
@@ -44,25 +66,13 @@ Piece_Type :: enum {
     BISHOP,
     QUEEN,
     KING,
+    NONE,
 }
 
-Piece :: struct {
-    id         : string,
-    spr        : Sprite,
-    pos        : rl.Vector2,
-    type       : Piece_Type,
-    e_color    : Ent_Color,
-    has_moved  : bool,
-}
-
-Entity :: struct {
-    alive      : bool,
-    rec        : rl.Rectangle,
-    spr        : Sprite,
-
-    color      : rl.Color,
-    speed      : f32,
-    move_dir   : rl.Vector2,
+Faction :: enum {
+    BLACK = 0,
+    WHITE = 1,
+    NONE = 2,
 }
 
 Cursor :: struct {

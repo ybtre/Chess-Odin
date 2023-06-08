@@ -32,9 +32,9 @@ setup_start_pieces_fen :: proc()
 					p := &pieces[total_counter]
 					t := &board.tiles[file_counter][rank_counter]
 
-					p.type = .ROOK
-					p.e_color = .BLACK
-					p.spr.src = SRC_BLACK_ROOK
+					p.data.type = .ROOK
+					p.visuals.color = .BLACK
+					p.visuals.spr.src = SRC_BLACK_ROOK
 					setup_piece_common(p, t)
 					total_counter += 1
 				}
@@ -43,9 +43,9 @@ setup_start_pieces_fen :: proc()
 					p := &pieces[total_counter]
 					t := &board.tiles[file_counter][rank_counter]
 
-					p.type = .ROOK
-					p.e_color = .WHITE
-					p.spr.src = SRC_WHITE_ROOK
+					p.data.type = .ROOK
+					p.visuals.color = .WHITE
+					p.visuals.spr.src = SRC_WHITE_ROOK
 					setup_piece_common(p, t)
 					total_counter += 1
 				}
@@ -54,9 +54,9 @@ setup_start_pieces_fen :: proc()
 					p := &pieces[total_counter]
 					t := &board.tiles[file_counter][rank_counter]
 
-					p.type = .KNIGHT
-					p.e_color = .BLACK
-					p.spr.src = SRC_BLACK_KNIGHT
+					p.data.type = .KNIGHT
+					p.visuals.color = .BLACK
+					p.visuals.spr.src = SRC_BLACK_KNIGHT
 					setup_piece_common(p, t)
 					total_counter += 1
 				}
@@ -65,9 +65,9 @@ setup_start_pieces_fen :: proc()
 					p := &pieces[total_counter]
 					t := &board.tiles[file_counter][rank_counter]
 
-					p.type = .KNIGHT
-					p.e_color = .WHITE
-					p.spr.src = SRC_WHITE_KNIGHT
+					p.data.type = .KNIGHT
+					p.visuals.color = .WHITE
+					p.visuals.spr.src = SRC_WHITE_KNIGHT
 					setup_piece_common(p, t)
 					total_counter += 1
 				}
@@ -77,9 +77,9 @@ setup_start_pieces_fen :: proc()
 					t := &board.tiles[file_counter][rank_counter]
 					total_counter += 1
 
-					p.type = .BISHOP
-					p.e_color = .BLACK
-					p.spr.src = SRC_BLACK_BISHOP
+					p.data.type = .BISHOP
+					p.visuals.color = .BLACK
+					p.visuals.spr.src = SRC_BLACK_BISHOP
 					setup_piece_common(p, t)
 				}
 				if piece == 'B'
@@ -88,9 +88,9 @@ setup_start_pieces_fen :: proc()
 					t := &board.tiles[file_counter][rank_counter]
 					total_counter += 1
 
-					p.type = .BISHOP
-					p.e_color = .WHITE
-					p.spr.src = SRC_WHITE_BISHOP
+					p.data.type = .BISHOP
+					p.visuals.color = .WHITE
+					p.visuals.spr.src = SRC_WHITE_BISHOP
 					setup_piece_common(p, t)
 				}
 				if piece == 'q'
@@ -99,9 +99,9 @@ setup_start_pieces_fen :: proc()
 					t := &board.tiles[file_counter][rank_counter]
 					total_counter += 1
 
-					p.type = .QUEEN
-					p.e_color = .BLACK
-					p.spr.src = SRC_BLACK_QUEEN				
+					p.data.type = .QUEEN
+					p.visuals.color = .BLACK
+					p.visuals.spr.src = SRC_BLACK_QUEEN				
 					setup_piece_common(p, t)
 				}
 				if piece == 'Q'
@@ -110,9 +110,9 @@ setup_start_pieces_fen :: proc()
 					t := &board.tiles[file_counter][rank_counter]
 					total_counter += 1
 
-					p.type = .QUEEN
-					p.e_color = .WHITE
-					p.spr.src = SRC_WHITE_QUEEN
+					p.data.type = .QUEEN
+					p.visuals.color = .WHITE
+					p.visuals.spr.src = SRC_WHITE_QUEEN
 					setup_piece_common(p, t)
 				}
 				if piece == 'k'
@@ -121,9 +121,9 @@ setup_start_pieces_fen :: proc()
 					t := &board.tiles[file_counter][rank_counter]
 					total_counter += 1
 
-					p.type = .KING
-					p.e_color = .BLACK
-					p.spr.src = SRC_BLACK_KING				
+					p.data.type = .KING
+					p.visuals.color = .BLACK
+					p.visuals.spr.src = SRC_BLACK_KING				
 					setup_piece_common(p, t)
 				}
 				if piece == 'K'
@@ -132,9 +132,9 @@ setup_start_pieces_fen :: proc()
 					t := &board.tiles[file_counter][rank_counter]
 					total_counter += 1
 
-					p.type = .KING
-					p.e_color = .WHITE
-					p.spr.src = SRC_WHITE_KING
+					p.data.type = .KING
+					p.visuals.color = .WHITE
+					p.visuals.spr.src = SRC_WHITE_KING
 					setup_piece_common(p, t)
 				}
 				if piece == 'p'
@@ -143,9 +143,9 @@ setup_start_pieces_fen :: proc()
 					t := &board.tiles[file_counter][rank_counter]
 					total_counter += 1
 
-					p.type = .PAWN
-					p.e_color = .BLACK
-					p.spr.src = SRC_BLACK_PAWN
+					p.data.type = .PAWN
+					p.visuals.color = .BLACK
+					p.visuals.spr.src = SRC_BLACK_PAWN
 					setup_piece_common(p, t)
 				}
 				if piece == 'P'
@@ -154,9 +154,9 @@ setup_start_pieces_fen :: proc()
 					t := &board.tiles[file_counter][rank_counter]
 					total_counter += 1
 
-					p.type = .PAWN
-					p.e_color = .WHITE
-					p.spr.src = SRC_WHITE_PAWN
+					p.data.type = .PAWN
+					p.visuals.color = .WHITE
+					p.visuals.spr.src = SRC_WHITE_PAWN
 					setup_piece_common(p, t)
 				}
 			
@@ -202,20 +202,23 @@ setup_start_pieces_fen :: proc()
 setup_piece_common :: proc(P: ^Piece, T: ^Tile) 
 {
 	// P.id = T.id
-	P.pos = T.pos
-	P.spr.SCALE_FACTOR = TILE_SCALE_FACTOR
+	P.visuals.pos = T.visuals.pos
+	P.visuals.spr.SCALE_FACTOR = TILE_SCALE_FACTOR
 
-	P.spr.dest = { P.pos.x, P.pos.y - 20, P.spr.src.width * P.spr.SCALE_FACTOR, P.spr.src.height * P.spr.SCALE_FACTOR }
-	P.spr.center = { P.spr.src.width * P.spr.SCALE_FACTOR / 2, P.spr.src.height * P.spr.SCALE_FACTOR / 2 }	
+	P.visuals.spr.dest = { P.visuals.pos.x, P.visuals.pos.y - 20, P.visuals.spr.src.width * P.visuals.spr.SCALE_FACTOR, P.visuals.spr.src.height * P.visuals.spr.SCALE_FACTOR }
+	P.visuals.spr.center = { P.visuals.spr.src.width * P.visuals.spr.SCALE_FACTOR / 2, P.visuals.spr.src.height * P.visuals.spr.SCALE_FACTOR / 2 }	
 
 	temp_buf : [6]byte
-	temp_id : [2]string = { piece_type_to_str(P.type), strconv.itoa(temp_buf[:], int(rl.GetRandomValue(0, 32767)))}
+	temp_id : [2]string = { piece_type_to_str(P.data.type), strconv.itoa(temp_buf[:], int(rl.GetRandomValue(0, 32767)))}
 	
-	P.id = strings.join(temp_id[:], "-")	
+	P.data.id = strings.join(temp_id[:], "-")	
 
-	P.has_moved = false
+	P.data.has_moved = false
+	P.data.has_calculated_moves = false
+
+	P.data.coords = T.data.tile_coords
 	
-	T.piece_on_tile = P 
+	T.data.piece = P 
 }
 
 piece_type_to_str :: proc(TYPE : Piece_Type) -> string
@@ -242,6 +245,9 @@ piece_type_to_str :: proc(TYPE : Piece_Type) -> string
 		case .KING:
 			result = "k"
 		break
+
+		case .NONE:
+		break
 	}
 	
 	return result
@@ -249,18 +255,18 @@ piece_type_to_str :: proc(TYPE : Piece_Type) -> string
 
 move_piece :: proc(PIECE : ^Piece, NEW_T, OLD_T: ^Tile)
 {
-	if NEW_T.piece_on_tile != nil
+	if NEW_T.data.piece != nil
 	{
 		fmt.println("TAKEN")
 	}
 
-	if NEW_T.piece_on_tile == nil
+	if NEW_T.data.piece == nil
 	{
 		fmt.println("FREE")
 		
-		OLD_T.piece_on_tile = nil
+		OLD_T.data.piece = nil
 		setup_piece_common(PIECE, NEW_T)
-		PIECE.has_moved = true
+		PIECE.data.has_moved = true
 
 		switch_player()
 	}
@@ -282,9 +288,9 @@ render_pieces :: proc()
 	{
 		DrawTexturePro(
 			TEX_SPRITESHEET,
-			pieces[i].spr.src,
-			pieces[i].spr.dest,
-			pieces[i].spr.center,
+			pieces[i].visuals.spr.src,
+			pieces[i].visuals.spr.dest,
+			pieces[i].visuals.spr.center,
 			0,
 			WHITE)
 	}

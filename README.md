@@ -5,7 +5,7 @@ Log of the process of creating a simple local 2 player chess game using free ass
 
   ### 1 month long project split into progress weeks
   
-  ##### Week 1 - 1.06 - 8.06
+  ##### Week 1 - 1.06 - 10.06
   #### Implement Basic Gameplay rules and sprites
     1. @DONE Implement FEN notation for setting up board
     - "animate" placing of pieces using a step counter(1 piece per half second interval)
@@ -21,7 +21,7 @@ Log of the process of creating a simple local 2 player chess game using free ass
 
   </details>
 
-  ##### Week 2 - 09.06 - 16.06
+  ##### Week 2 - 09.06 - 16.06 - TO BE DECIDED DUE TO HOLIDAY
   #### Implement Easings and feel, give users feedback
 
   ##### Week 3 - 17.06 - 24.06
@@ -34,7 +34,10 @@ Log of the process of creating a simple local 2 player chess game using free ass
 
 <details>
   <summary> Log </summary>
-  
+
+  #### 08.06.23
+    1. a shit ton of refactoring to ease the pain i got into trying to implement piece movement during the week
+          
   #### 31.05.23
     1. refactoring to remove unneeded files
     2. readme update with log and plan
