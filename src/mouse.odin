@@ -45,6 +45,46 @@ mouse_get_selected_tile :: proc() -> ^Tile
 	return nil
 }
 
+can_execute_move :: proc() -> bool
+{
+	using rl
+
+	for x in 0..<8 {
+		for y in 0..<8
+		{
+			t := &board.tiles[x][y]
+
+			if CheckCollisionPointRec(GetMousePosition(), t.visuals.hitbox)
+			{
+				if IsMouseButtonPressed(MouseButton.LEFT)
+				{
+					if selected_tile.data.state == .AVAILABLE_MOVES
+					{
+						return true
+					}
+				}
+			}
+		}
+	}
+
+	return false
+	
+}
+
+move_execute :: proc() -> bool
+{
+	using rl
+
+	if selected_tile.data.piece != nil
+	{
+		fmt.println("TAKE!")
+	}
+	move_piece(last_selected_tile.data.piece, selected_tile, last_selected_tile)
+	return true
+
+	// return false
+}
+
 update_check_mouse_collision :: proc() 
 {
 	using rl

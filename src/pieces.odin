@@ -267,8 +267,6 @@ move_piece :: proc(PIECE : ^Piece, NEW_T, OLD_T: ^Tile)
 		OLD_T.data.piece = nil
 		setup_piece_common(PIECE, NEW_T)
 		PIECE.data.has_moved = true
-
-		switch_player()
 	}
 }
 

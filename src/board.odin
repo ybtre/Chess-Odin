@@ -155,13 +155,17 @@ possible_moves_calculate :: proc(T : ^Tile)
 
 vertical_check :: proc(CURR_T_COORDS : [2]int, SELECTED_P : ^Piece)
 {
-	//@Fix: tile highlighting!!!
 	
 }
 
 diagonal_check :: proc(CURR_T_COORDS : [2]int, SELECTED_P : ^Piece)
 {
 	
+}
+
+piece_take :: proc()
+{
+		
 }
 
 calculate_selected_piece_possible_moves :: proc()
@@ -365,7 +369,7 @@ apply_possible_moves :: proc()
 		for y := 0; y < 8; y +=1
 		{
 			t := &board.tiles[x][y]
-			if t != selected_tile
+			if t != selected_tile && t != hover_tile
 			{
 				t.data.state = .IDLE
 			} 

@@ -8,6 +8,8 @@ hover_tile            : ^Tile
 last_selected_tile    : ^Tile
 selected_tile         : ^Tile
 
+has_move_executed     : bool        = false
+can_move_execute      : bool        = false
 
 update_gameplay :: proc() {
     using rl
@@ -26,16 +28,16 @@ update_gameplay :: proc() {
         }
         
         {//mouse_check_button_press -> return current selected tile
-            last_selected_tile = mouse_get_selected_tile()
+            new_selected := mouse_get_selected_tile()
 
-            if last_selected_tile != nil
+            if new_selected != nil
             {   
-                if selected_tile != nil
+                if last_selected_tile != nil
                 {
-                    selected_tile.data.state = .IDLE
+                    last_selected_tile.data.state = .IDLE
                 }
-                
-                selected_tile = last_selected_tile
+                last_selected_tile = selected_tile
+                selected_tile = new_selected
             }
         }
         
@@ -48,16 +50,21 @@ update_gameplay :: proc() {
             {
                 hover_tile.data.state = .HIGHLIGHTED
             }
+        }
 
+        {// handle selecting new tile
             if (selected_tile != nil) 
             {    
-                selected_tile.data.state = .SELECTED
-
-                possible_moves_reset()
-
-                if selected_tile.data.piece != nil
+                if selected_tile.data.state != .AVAILABLE_MOVES
                 {
-                    selected_tile.data.piece.data.has_calculated_moves = false
+                    selected_tile.data.state = .SELECTED
+
+                    possible_moves_reset()
+
+                    if selected_tile.data.piece != nil
+                    {
+                        selected_tile.data.piece.data.has_calculated_moves = false
+                    }
                 }
             }
         }
@@ -93,14 +100,28 @@ update_gameplay :: proc() {
             
             apply_possible_moves()
         }
-        //- if selected tile != piece -- just select
-        //- if selected tile == piece -- calculate possible moves for turn (pass in Color)
-        //execute_move
-        //give_turn_to_other_player
-        //states?
-        // update_board()
-        // update_pieces()
-        // update_check_mouse_collision()
+
+        if selected_tile != nil && last_selected_tile != nil
+        {
+            if last_selected_tile.data.piece != nil
+            {
+                if last_selected_tile.data.piece.data.has_calculated_moves == true
+                {
+                    can_move_execute = can_execute_move()
+                    if can_move_execute == true          
+                    {
+                        has_move_executed = move_execute()
+                    }
+                }
+            }
+        }
+
+        if has_move_executed == true 
+        {    
+            possible_moves_reset()
+            switch_player()
+            has_move_executed = false
+        }
     }
     else 
     {

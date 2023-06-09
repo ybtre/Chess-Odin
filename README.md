@@ -35,6 +35,10 @@ Log of the process of creating a simple local 2 player chess game using free ass
 <details>
   <summary> Log </summary>
 
+  #### 09.06.23
+    1. fixed highlight
+    2. implemented turn order and can move pieces
+  
   #### 08.06.23
     1. a shit ton of refactoring to ease the pain i got into trying to implement piece movement during the week
           
