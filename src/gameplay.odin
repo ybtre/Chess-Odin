@@ -1,7 +1,7 @@
 package fantasy_chess 
 
 import rl "vendor:raylib"
-// import "core:fmt"
+import "core:fmt"
 
 last_hover_tile       : ^Tile
 hover_tile            : ^Tile
@@ -55,8 +55,19 @@ update_gameplay :: proc() {
         {// handle selecting new tile
             if (selected_tile != nil) 
             {    
-                if selected_tile.data.state != .AVAILABLE_MOVES
+                if selected_tile.data.state == .CAN_MOVE
                 {
+                    fmt.println("CAN MOVE")
+                }
+
+                if selected_tile.data.state == .CAN_TAKE
+                {
+                    fmt.println("CAN TAKE")
+                }
+                
+                if selected_tile.data.state != .CAN_MOVE && 
+                    selected_tile.data.state != .CAN_TAKE
+                {    
                     selected_tile.data.state = .SELECTED
 
                     possible_moves_reset()

@@ -259,8 +259,7 @@ move_piece :: proc(PIECE : ^Piece, NEW_T, OLD_T: ^Tile)
 	{
 		fmt.println("TAKEN")
 	}
-
-	if NEW_T.data.piece == nil
+	else if NEW_T.data.piece == nil
 	{
 		fmt.println("FREE")
 		

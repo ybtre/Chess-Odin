@@ -89,7 +89,8 @@ possible_moves_calculate :: proc(T : ^Tile)
 		{
 			case .PAWN:
 				if p.visuals.color == .WHITE
-				{
+				{	
+					//@Incomplete: implement checking for ability to move forward and to take a piece
 					if p.data.has_moved == false
 					{	
 						append(&y_moves, tile_coords[1] + 2)
@@ -168,7 +169,7 @@ piece_take :: proc()
 		
 }
 
-calculate_selected_piece_possible_moves :: proc()
+OLD_calculate_selected_piece_possible_moves :: proc()
 {	
 	using strconv 
 	
@@ -378,7 +379,7 @@ apply_possible_moves :: proc()
 
 	for i := 0; i < len(possible_moves); i+=1
 	{
-		possible_moves[i].data.state = .AVAILABLE_MOVES
+		possible_moves[i].data.state = .CAN_MOVE
 	}
 }
 
@@ -447,7 +448,7 @@ render_board_tiles :: proc()
 					}
 					break
 
-				case .AVAILABLE_MOVES:
+				case .CAN_MOVE:
 					if t.visuals.color == .WHITE
 					{
 						t.visuals.spr.src = SRC_TILE_WHITE_MOVES
@@ -455,6 +456,16 @@ render_board_tiles :: proc()
 					else if t.visuals.color == .BLACK 
 					{
 						t.visuals.spr.src = SRC_TILE_BLACK_MOVES
+					}
+					break
+				case .CAN_TAKE:
+					if t.visuals.color == .WHITE
+					{
+						t.visuals.spr.src = SRC_TILE_WHITE_SELECTED
+					}
+					else if t.visuals.color == .BLACK 
+					{
+						t.visuals.spr.src = SRC_TILE_BLACK_SELECTED
 					}
 					break
 			}

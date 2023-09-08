@@ -37,7 +37,8 @@ Tile_State :: enum {
     IDLE,
     HIGHLIGHTED,
     SELECTED,
-    AVAILABLE_MOVES,
+    CAN_MOVE,
+    CAN_TAKE,
 }
 
 Piece :: struct {

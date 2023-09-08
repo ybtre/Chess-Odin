@@ -58,7 +58,7 @@ can_execute_move :: proc() -> bool
 			{
 				if IsMouseButtonPressed(MouseButton.LEFT)
 				{
-					if selected_tile.data.state == .AVAILABLE_MOVES
+					if selected_tile.data.state == .CAN_MOVE
 					{
 						return true
 					}
@@ -75,7 +75,7 @@ move_execute :: proc() -> bool
 {
 	using rl
 
-	if selected_tile.data.piece != nil
+	if selected_tile.data.state == .CAN_TAKE
 	{
 		fmt.println("TAKE!")
 	}
@@ -96,7 +96,7 @@ update_check_mouse_collision :: proc()
 			
 			if CheckCollisionPointRec(GetMousePosition(), t.visuals.hitbox)
 			{
-				if t.data.state != .SELECTED && t.data.state != .AVAILABLE_MOVES 
+				if t.data.state != .SELECTED && t.data.state != .CAN_MOVE 
 				{ 
 					t.data.state = .HIGHLIGHTED
 				}
@@ -113,7 +113,7 @@ update_check_mouse_collision :: proc()
 					{ 
 						if selected_tile.data.piece != nil
 						{
-							if t.data.state == .AVAILABLE_MOVES
+							if t.data.state == .CAN_MOVE
 							{
 								fmt.println("MOVE")
 								move_piece(selected_tile.data.piece, t, selected_tile)
